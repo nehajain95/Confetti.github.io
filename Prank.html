@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Friendly Prank 🎉</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{ --bg:#0b1226; --card:#fff; --accent:#ffcc00 }
+    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
+    body{display:flex;align-items:center;justify-content:center;background:
+      radial-gradient(circle at 10% 10%, rgba(255,200,0,0.08), transparent 10%),
+      linear-gradient(180deg,#071021 0%,#071633 60%); color:#fff;}
+    .card{width:min(720px,94vw);padding:28px;border-radius:16px;background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));box-shadow:0 8px 30px rgba(2,6,23,0.7);text-align:center}
+    h1{margin:6px 0 8px;font-size:28px;letter-spacing:-0.5px}
+    p{margin:0 0 18px;color:rgba(255,255,255,0.9)}
+    .big-emoji{font-size:64px;filter:drop-shadow(0 6px 18px rgba(0,0,0,0.6))}
+    button{appearance:none;border:0;padding:10px 14px;border-radius:10px;background:var(--accent);color:#111;font-weight:700;cursor:pointer}
+    .footer{margin-top:14px;font-size:13px;color:rgba(255,255,255,0.7)}
+    /* falling confetti */
+    .confetti-piece{position:fixed;top:-10vh;left:0;width:12px;height:12px;opacity:0.95;will-change:transform;pointer-events:none;}
+  </style>
+</head>
+<body>
+  <div class="card" role="dialog" aria-labelledby="title" aria-describedby="desc">
+    <div class="big-emoji" aria-hidden="true">🎉😁</div>
+    <h1 id="title">Surprise — it's a harmless prank!</h1>
+    <p id="desc">This page is a silly joke. No data is collected. Tap the button to release confetti.</p>
+    <button id="go">Let the confetti fly 🎊</button>
+    <div class="footer">Tip: you can edit the message before sharing so it's personal and clearly funny.</div>
+  </div>
+
+  <script>
+    // Simple confetti implementation — creates colorful squares that fall.
+    const colors = ['#ff4d4f','#ffa940','#ffec3d','#73d13d','#36cfc9','#5b8cff','#d39eeb'];
+    function spawnConfetti(count=60){
+      for(let i=0;i<count;i++){
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        const size = 8 + Math.random()*18;
+        el.style.width = el.style.height = size + 'px';
+        el.style.background = colors[Math.floor(Math.random()*colors.length)];
+        el.style.left = (Math.random()*100) + 'vw';
+        el.style.top = (-5 - Math.random()*15) + 'vh';
+        el.style.transform = `rotate(${Math.random()*360}deg)`;
+        document.body.appendChild(el);
+
+        // animation:
+        const duration = 3000 + Math.random()*2500;
+        const endX = (Math.random()-0.5) * 50; // horizontal drift
+        const endY = 110 + Math.random()*40; // down
+        el.animate([
+          { transform: `translate3d(0,0,0) rotate(${Math.random()*360}deg)`, opacity:1 },
+          { transform: `translate3d(${endX}vw, ${endY}vh, 0) rotate(${Math.random()*720}deg)`, opacity:0.9 }
+        ], { duration, easing:'cubic-bezier(.2,.6,.25,1)' });
+
+        // remove after animation ends
+        setTimeout(()=> el.remove(), duration + 100);
+      }
+    }
+
+    document.getElementById('go').addEventListener('click', () => {
+      spawnConfetti(90);
+      // brief friendly message change
+      const h = document.getElementById('title');
+      h.textContent = "😂 Gotcha! Hope you're smiling.";
+      // small visual pulse
+      document.querySelector('.card').animate([{ transform: 'scale(1)' },{ transform:'scale(1.01)' },{ transform:'scale(1)' }],{ duration:400 });
+    });
+  </script>
+</body>
+</html>
